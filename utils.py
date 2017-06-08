@@ -1,9 +1,8 @@
+import logging
 from sklearn.metrics import log_loss
-import pandas as pd
 import re
 import spacy
 nlp = spacy.load('en_core_web_md')
-import logging
 
 SPECIAL_TOKENS = {
     'quoted': 'quoted_item',
@@ -32,7 +31,7 @@ def clean_string(text):
         matched_string = pattern.group(0)
         return matched_string[:-1] + matched_string[-1].lower()
 
-    text = re.sub("(?<=[\.\?\)\!\'\"])[\s]*.",lower_first_char , text)
+    text = re.sub("(?<=[\.\?\)\!\'\"])[\s]*.", lower_first_char, text)
 
     # Replace weird chars in text
     text = re.sub("’", "'", text)  # special single quote
@@ -70,7 +69,7 @@ def clean_string(text):
     # replace the float numbers with a random number, it will be parsed as number afterward,
     # and also been replaced with word "number"
 
-    #text = re.sub('[0-9]+\.[0-9]+', " 87 ", text)
+    # text = re.sub('[0-9]+\.[0-9]+', " 87 ", text)
 
     # remove anything between numbers, i.e. 15x000 -> 15000
     #
@@ -241,5 +240,4 @@ def normalize(text):
 
 
 if __name__ == "__main__":
-    print(clean_string("I'm well-prepared  vrd-ddw d   deef"))
-
+    print(clean_string("I'm well-prepared, vrd-ddw d   deef?"))
