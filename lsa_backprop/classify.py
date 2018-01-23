@@ -2,7 +2,7 @@ from sklearn.linear_model import LogisticRegression
 from scipy.stats import logistic
 import numpy as np
 
-class Classifier(object):
+class CustomClassifier(object):
     def __init__(self, alpha=0.01):
         self.alpha = alpha
 

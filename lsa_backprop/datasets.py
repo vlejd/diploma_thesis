@@ -34,6 +34,12 @@ class Dataset(object):
         with io.open(fpath, 'r', encoding='latin-1') as f:
             return [line.split() for line in f.read().splitlines()]
 
+    def baseline(self):
+        mean = np.mean(self.labels)
+        return max(mean, 1-mean)
+
+    def name(self):
+        return self.__class__.__name__
     
 class CRDataset(Dataset):
     def load_positives(self):
