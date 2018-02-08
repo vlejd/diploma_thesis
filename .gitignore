@@ -101,12 +101,12 @@ ENV/
 .mypy_cache/
 
 # tex
-.aux
-.log
-.dvi
-.aux
-.nav
-.out
-.snm
-.toc
-.synctex.gz
+*.aux
+*.log
+*.dvi
+*.aux
+*.nav
+*.out
+*.snm
+*.toc
+*.synctex.gz
