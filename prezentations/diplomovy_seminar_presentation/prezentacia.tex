@@ -1,0 +1,51 @@
+\documentclass[xcolor={table}]{beamer}
+\usepackage[slovak]{babel}
+\usepackage[utf8]{inputenc}
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{animate}
+\usepackage{subcaption}
+\usepackage{multicol}
+\usepackage[full, italic, slant]{complexity}
+
+\def\*{{\bf FIXME: }}
+
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{bibliography item}{\insertbiblabel}
+\newtheorem{deff}{Definícia}[section]
+
+\mode<presentation> {
+    \usetheme{Warsaw}
+    \usecolortheme{seahorse}
+    \usecolortheme{rose}
+    \usefonttheme{professionalfonts}
+    \setbeamercovered{transparent}
+}
+
+\definecolor{bloodred}{RGB}{200,0,0}
+
+
+\title{}
+\author{Bc. Vladimír Macko}
+\institute{RNDr. Radim Řehůřek, Ph.D}
+
+\begin{document}
+        
+    \begin{frame}
+        \titlepage
+    \end{frame}
+    
+    \section{Intro}
+        \begin{frame}{Intro}
+            \begin{block}{}
+                \begin{itemize}
+                    \item \emph{Solving combinatorial problems: The 15-puzzle} \cite{Pizlo2005}
+                    \item \emph{Difficulty Rating of Sokoban Puzzle} \cite{Jarusek2010}
+                    \item \emph{What Determines Difficulty of Transport Puzzles?} \cite{transport}
+                \end{itemize}
+            \end{block}
+        \end{frame} 
+\end{document}

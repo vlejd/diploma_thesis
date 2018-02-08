@@ -105,3 +105,8 @@ ENV/
 .log
 .dvi
 .aux
+.nav
+.out
+.snm
+.toc
+.synctex.gz
