@@ -1,0 +1,15 @@
+Dear coleagues,
+My name is vladimir Macko and I would like to presend you with my diploma thesis.
+
+First i will introduce you to problem of document classification and word embeddings.
+Then I outline some current problems of used approaches and our solutions tu them
+Finally I presend how good are these solutions and what are our next plans.
+
+In a document classification task, we are given a document (a sentence) and we need to clasify it into predifined categories. For example classyfi movie revie as positive or negative. A common apprach is to create a vector representation for each word in the document, merge it into a document representation and make a prediction out of it.
+
+There are two types of representations. Local, like one hot encoding, and distributed. 
+We will focus on the distributed. Currently, there are two main ways of obtaining distributional representation. 
+In count based aproaches, we construct a coocurence matrix of  words in documents (or kontexts). 
+
+
+
