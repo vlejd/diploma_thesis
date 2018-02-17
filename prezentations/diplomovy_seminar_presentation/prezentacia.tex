@@ -58,10 +58,10 @@
 
 \section{Introduction}
 \begin{frame}{Document classification}
-	\begin{block}{}
-		\emph{This was a terrible movie}
-	\end{block}
-	
+    \begin{block}{}
+        \emph{This was a terrible movie}
+    \end{block}
+    
     \begin{block}{}   
         \begin{itemize}
             \item create representation for words
@@ -172,39 +172,39 @@
 \end{frame} 
 
 \begin{frame}{Gradient descent}
-	\begin{columns}	
-	\column{0.5\linewidth}
-	\begin{itemize}
+    \begin{columns}    
+    \column{0.5\linewidth}
+    \begin{itemize}
         \item Co-occurrence matrix $M$
         \item Weight vector $t$
-	\end{itemize}
-	\column{0.5\linewidth}
-	\begin{itemize}
+    \end{itemize}
+    \column{0.5\linewidth}
+    \begin{itemize}
         \item SVD: $U \Sigma V^T$
         \item Simple classifier: $\sigma (x \theta + b)$
-	\end{itemize}	
-	\end{columns}
+    \end{itemize}    
+    \end{columns}
 
-	\begin{block}{}
-	\begin{itemize}
+    \begin{block}{}
+    \begin{itemize}
         \item Reweighted matrix $M \circ t$
         \item SVD decomposition $U \Sigma V^T$
         \item Compute embedding $x = d \circ t U$
         \item Train classifier $\hat{y} = \sigma (x \theta + b)$
         \item Compute error $E = \frac{1}{2}(\hat{y}-y)^2$
-        \item Compute derivation $\frac{\partial E}{\partial t} = (\hat{y} -y) \sigma{\hat{y}} (1-\sigma{\hat{y}})\Theta U$
+        \item Compute derivation $\frac{\partial E}{\partial t} = (\hat{y} -y) \sigma(\hat{y}) (1-\sigma(\hat{y}))\Theta U$
         \item Update weights: $t = t - \alpha \frac{\partial E}{\partial t}$
-	\end{itemize}	
-	\end{block}
+    \end{itemize}    
+    \end{block}
 \end{frame} 
 
 \begin{frame}{Evaluation}
     \begin{block}{Datasets from SentEval \cite{conneau2017supervised}}
         \begin{itemize}
-	        \item Costumer review dataset
-	        \item Movie review
-	        \item Subjective vs objective
-	        \item Opinion polarity	        
+            \item Custumer review dataset
+            \item Movie review
+            \item Subjective vs objective
+            \item Opinion polarity            
         \end{itemize}
     \end{block}
     
@@ -213,104 +213,104 @@
 
 \section{Results}
 \begin{frame}{}
-	\begin{columns}
-		\column{0.5\linewidth}
-   				\begin{figure}[H]
-        			\centering
-        			\caption*{SVD + logistic regression}
-        			\includegraphics[height=0.4\textheight]{images/CRDataset.png}
-        			\caption{Precision of baseline on CR dataset for multiple tries}
-        		\end{figure}
-        	\column{0.5\linewidth}
+    \begin{columns}
+        \column{0.5\linewidth}
+                   \begin{figure}[H]
+                    \centering
+                    \caption*{SVD + logistic regression}
+                    \includegraphics[height=0.4\textheight]{images/CRDataset.png}
+                    \caption{Precision of baseline on CR dataset for multiple tries}
+                \end{figure}
+            \column{0.5\linewidth}
 
-        		\begin{figure}[H]
-        			\centering
-        			\caption*{TFIDF + SVD + logistic regression}
-        			\includegraphics[height=0.4\textheight]{images/CRDataset_tfidf.png}
-        			\caption{Precision of baseline on CR dataset for multiple tries}
-        		\end{figure}
-	\end{columns}
-        		
+                \begin{figure}[H]
+                    \centering
+                    \caption*{TFIDF + SVD + logistic regression}
+                    \includegraphics[height=0.4\textheight]{images/CRDataset_tfidf.png}
+                    \caption{Precision of baseline on CR dataset for multiple tries}
+                \end{figure}
+    \end{columns}
+                
 \end{frame} 
 
 \begin{frame}{}
-	\begin{columns}
-		\column{0.5\linewidth}
-   				\begin{figure}[H]
-        			\centering
-        			\caption*{SVD + LR + gradient}
-        			\includegraphics[height=0.4\textheight]{images/CRDataset_grad.png}
-        			\caption{Precision of weight improving on CR dataset for multiple epochs}
-        		\end{figure}
-        	\column{0.5\linewidth}
+    \begin{columns}
+        \column{0.5\linewidth}
+                   \begin{figure}[H]
+                    \centering
+                    \caption*{SVD + LR + gradient}
+                    \includegraphics[height=0.4\textheight]{images/CRDataset_grad.png}
+                    \caption{Precision of weight improving on CR dataset for multiple epochs}
+                \end{figure}
+            \column{0.5\linewidth}
 
-        		\begin{figure}[H]
-        			\centering
-        			\caption*{TFIDF + SVD + LR + gradient}
-        			\includegraphics[height=0.4\textheight]{images/CRDataset_tfidf_grad.png}
-        			\caption{Precision of tfidf weight improving on CR dataset for multiple epochs}
-        		\end{figure}
-	\end{columns}        		
+                \begin{figure}[H]
+                    \centering
+                    \caption*{TFIDF + SVD + LR + gradient}
+                    \includegraphics[height=0.4\textheight]{images/CRDataset_tfidf_grad.png}
+                    \caption{Precision of tfidf weight improving on CR dataset for multiple epochs}
+                \end{figure}
+    \end{columns}                
 \end{frame} 
 
 \begin{frame}{}
-	\begin{columns}
-		\column{0.5\linewidth}
-   				\begin{figure}[H]
-        			\centering
-        			\caption*{SVD + LR + gradient}
-        			\includegraphics[height=0.4\textheight]{images/MRDataset_grad.png}
-        			\caption{Precision of weight improving on MR dataset for multiple epochs}
-        		\end{figure}
-        	\column{0.5\linewidth}
+    \begin{columns}
+        \column{0.5\linewidth}
+                   \begin{figure}[H]
+                    \centering
+                    \caption*{SVD + LR + gradient}
+                    \includegraphics[height=0.4\textheight]{images/MRDataset_grad.png}
+                    \caption{Precision of weight improving on MR dataset for multiple epochs}
+                \end{figure}
+            \column{0.5\linewidth}
 
-        		\begin{figure}[H]
-        			\centering
-        			\caption*{TFIDF + SVD + LR + gradient}
-        			\includegraphics[height=0.4\textheight]{images/MRDataset_tfidf_grad.png}
-        			\caption{Precision of tfidf weight improving on MR dataset for multiple epochs}
-        		\end{figure}
-	\end{columns}        		
+                \begin{figure}[H]
+                    \centering
+                    \caption*{TFIDF + SVD + LR + gradient}
+                    \includegraphics[height=0.4\textheight]{images/MRDataset_tfidf_grad.png}
+                    \caption{Precision of tfidf weight improving on MR dataset for multiple epochs}
+                \end{figure}
+    \end{columns}                
 \end{frame} 
 
 \begin{frame}{}
-	\begin{columns}
-		\column{0.5\linewidth}
-   				\begin{figure}[H]
-        			\centering
-        			\caption*{SVD + LR + gradient}
-        			\includegraphics[height=0.4\textheight]{images/MPQADataset_grad.png}
-        			\caption{Precision of weight improving on MPQA dataset for multiple epochs}
-        		\end{figure}
-        	\column{0.5\linewidth}
+    \begin{columns}
+        \column{0.5\linewidth}
+            \begin{figure}[H]
+                \centering
+                \caption*{SVD + LR + gradient}
+                \includegraphics[height=0.4\textheight]{images/MPQADataset_grad.png}
+                \caption{Precision of weight improving on MPQA dataset for multiple epochs}
+            \end{figure}
+        \column{0.5\linewidth}
 
-        		\begin{figure}[H]
-        			\centering
-        			\caption*{TFIDF + SVD + LR + gradient}
-        			\includegraphics[height=0.4\textheight]{images/MPQADataset_tfidf_grad.png}
-        			\caption{Precision of tfidf weight improving on MPQA dataset for multiple epochs}
-        		\end{figure}
-	\end{columns}        		
+            \begin{figure}[H]
+                \centering
+                \caption*{TFIDF + SVD + LR + gradient}
+                \includegraphics[height=0.4\textheight]{images/MPQADataset_tfidf_grad.png}
+                \caption{Precision of tfidf weight improving on MPQA dataset for multiple epochs}
+            \end{figure}
+    \end{columns}                
 \end{frame} 
 
 \begin{frame}{}
-	\begin{columns}
-		\column{0.5\linewidth}
-   				\begin{figure}[H]
-        			\centering
-        			\caption*{SVD + LR + gradient}
-        			\includegraphics[height=0.4\textheight]{images/SUBJDataset_grad.png}
-        			\caption{Precision of weight improving on SUBJ dataset for multiple epochs}
-        		\end{figure}
-        	\column{0.5\linewidth}
+    \begin{columns}
+        \column{0.5\linewidth}
+                   \begin{figure}[H]
+                    \centering
+                    \caption*{SVD + LR + gradient}
+                    \includegraphics[height=0.4\textheight]{images/SUBJDataset_grad.png}
+                    \caption{Precision of weight improving on SUBJ dataset for multiple epochs}
+                \end{figure}
+            \column{0.5\linewidth}
 
-        		\begin{figure}[H]
-        			\centering
-        			\caption*{TFIDF + SVD + LR + gradient}
-        			\includegraphics[height=0.4\textheight]{images/SUBJDataset_tfidf_grad.png}
-        			\caption{Precision of tfidf weight improving on SUBJ dataset for multiple epochs}
-        		\end{figure}
-	\end{columns}        		
+                \begin{figure}[H]
+                    \centering
+                    \caption*{TFIDF + SVD + LR + gradient}
+                    \includegraphics[height=0.4\textheight]{images/SUBJDataset_tfidf_grad.png}
+                    \caption{Precision of tfidf weight improving on SUBJ dataset for multiple epochs}
+                \end{figure}
+    \end{columns}                
 \end{frame} 
 
 
@@ -341,12 +341,12 @@
 
 \appendix
 
-		\subsection{Literature}                
+        \subsection{Literature}                
             \begin{frame}[allowframebreaks]{Literature}
-			\footnotesize
-				\nocite{*}
-				\bibliographystyle{apalike}
-				\bibliography{prezentacia.bib} 
+            \footnotesize
+                \nocite{*}
+                \bibliographystyle{apalike}
+                \bibliography{prezentacia.bib} 
             \end{frame}
 
 \end{document}\grid
