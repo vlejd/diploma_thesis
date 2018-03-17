@@ -68,3 +68,6 @@ class MPQADataset(Dataset):
 
     def load_negatives(self):
         return self.loadFile(os.path.join(SENTEVAL_DATA_BASE, 'MPQA/mpqa.neg'))       
+
+
+ALL_DATASETS = [CRDataset(), MRDataset(), SUBJDataset(), MPQADataset()]

@@ -58,3 +58,15 @@ class SkClassifier(object):
     
     def predict(self, X):
         return self.raw_cls.predict(X)
+
+
+class MostClassifier(object):
+    def __init__(self, params=None):
+        self.most = None
+
+    def fit(self, X, Y):
+        self.most = round(np.mean(Y))
+    
+    def predict(self, X):
+        return self.most
+
