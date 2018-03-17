@@ -1,11 +1,18 @@
 # We are using implementation of https://github.com/aysent/supervised-term-weighting/blob/master/stw.py
-
+# TODO rewrite!!!
 
 import numpy as np
 import scipy.sparse as sp
 
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import normalize
+from sklearn.feature_extraction.text import TfidfTransformer
+
+
+class UnsupervisedTfidfTransformer(TfidfTransformer):
+    def fit(self, X, y=None):
+        return super().fit(X)
+
 
 class SupervisedTermWeightingWTransformer(BaseEstimator, TransformerMixin):
     

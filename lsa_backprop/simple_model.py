@@ -1,12 +1,19 @@
 from sklearn.linear_model import LogisticRegression
-from sklearn.feature_extraction.text import TfidfTransformer
 import gensim
 import numpy as np
+from term_weights import SupervisedTermWeightingWTransformer, UnsupervisedTfidfTransformer
 
 class SimpleModel(object):
     
-    TRANSFORMERS = {
-        'tfidf': TfidfTransformer(norm=None),
+    SCHEMES = (None, 'tfidf', 'tfchi2', 'tfig', 'tfgr', 'tfor', 'tfrf', 'None')
+    TRANSFORMERS = { 
+        'tfidf': UnsupervisedTfidfTransformer(norm=None),
+        'tfchi2': SupervisedTermWeightingWTransformer(scheme='tfchi2'),
+        'tfig': SupervisedTermWeightingWTransformer(scheme='tfig'),
+        'tfgr': SupervisedTermWeightingWTransformer(scheme='tfgr'),
+        'tfor': SupervisedTermWeightingWTransformer(scheme='tfor'),
+        'tfrf': SupervisedTermWeightingWTransformer(scheme='tfrf'),
+        'None': None,
         None: None
     }
 
@@ -26,7 +33,7 @@ class SimpleModel(object):
         bow = list(map(self.dictionary.doc2bow, X))
         bow = gensim.matutils.corpus2csc(bow, num_terms=self.num_terms).T
         if self.weight_model is not None:
-            self.weight_model.fit(bow)
+            self.weight_model.fit(bow, Y)
             bow = self.weight_model.transform(bow)
         if self.w is None:
             self.w = np.ones(self.num_terms)
