@@ -13,11 +13,13 @@ class CustomClassifier(object):
             self.update(X, Y)
     
     def update(self, X, Y):
-        h = (X*self.w).sum(axis=1) + self.b
+        h = X.dot(self.w)
+        #h = h.sum(axis=1) 
+        h += self.b
         Yhat = logistic.cdf(h)
         dif = Yhat-Y
         sigma = dif * Yhat * (1-Yhat)
-        dw = (sigma.reshape(-1,1)* X).sum(axis=0)
+        dw = (X.T.dot(sigma.reshape(-1,1))).T.sum(axis=0)
         db = sigma.sum()
         self.b -= db
         self.w -= dw
@@ -30,7 +32,7 @@ class CustomClassifier(object):
         dx = (sigma.reshape(-1,1)* self.w)
     
     def predict(self, X):
-        h = (X*self.w).sum(axis=1) + self.b
+        h = X.dot(self.w) + self.b
         Yhat = logistic.cdf(h)
         return (Yhat>0.5)+0
 

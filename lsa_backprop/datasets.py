@@ -69,5 +69,15 @@ class MPQADataset(Dataset):
     def load_negatives(self):
         return self.loadFile(os.path.join(SENTEVAL_DATA_BASE, 'MPQA/mpqa.neg'))       
 
+class DebugDataset(CRDataset):
+    def __init__(self, seed=1111):
+        super().__init__(seed)
+
+        self.positives = self.positives[:100]
+        self.negatives = self.negatives[:100]
+        self.samples = self.positives + self.negatives
+        self.labels = np.array([1] * len(self.positives) + [0] * len(self.negatives))
+        self.n_samples = len(self.samples)
+        self.reshufle(seed)
 
 ALL_DATASETS = [CRDataset(), MRDataset(), SUBJDataset(), MPQADataset()]

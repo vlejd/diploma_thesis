@@ -1,34 +1,41 @@
 from sklearn.linear_model import LogisticRegression
+from sklearn.feature_extraction.text import TfidfTransformer
 import gensim
 import numpy as np
 
 class SimpleModel(object):
-    def __init__(self, cls=None, use_tfidf=False, w=None, use_svd=True):
+    
+    TRANSFORMERS = {
+        'tfidf': TfidfTransformer(norm=None),
+        None: None
+    }
+
+    def __init__(self, cls=None, weights=None, w=None, use_svd=True):
         self.cls = cls
         if self.cls is None:
             self.cls = LogisticRegression()
-        self.use_tfidf = use_tfidf
+        self.weight_model = self.TRANSFORMERS[weights] 
         self.w = w
         self.use_svd = use_svd
         
+
 
     def fit(self, X, Y):
         self.dictionary = gensim.corpora.Dictionary(X)
         self.num_terms = len(self.dictionary.dfs)
         bow = list(map(self.dictionary.doc2bow, X))
-        if self.use_tfidf:
-            self.tfidf_model = gensim.models.TfidfModel(bow)
-            bow = self.tfidf_model[bow]
+        bow = gensim.matutils.corpus2csc(bow, num_terms=self.num_terms).T
+        if self.weight_model is not None:
+            self.weight_model.fit(bow)
+            bow = self.weight_model.transform(bow)
         if self.w is None:
             self.w = np.ones(self.num_terms)
         if self.use_svd:
-            bow = gensim.matutils.corpus2csc(bow, num_terms=self.num_terms)
-            bow = gensim.matutils.Sparse2Corpus(bow.multiply(self.w.reshape(-1,1)))
+            bow = gensim.matutils.Sparse2Corpus(bow.T)
             self.lsi = gensim.models.LsiModel(bow, id2word=self.dictionary)
             self.corpus = gensim.matutils.corpus2dense(self.lsi[bow], self.lsi.num_topics).T
         else:
-            bow = gensim.matutils.corpus2csc(bow, num_terms=self.num_terms)
-            self.corpus = bow.multiply(self.w.reshape(-1,1)).T
+            self.corpus = bow.multiply(self.w)
             
         self.cls.fit(self.corpus, Y)
     
@@ -43,18 +50,17 @@ class SimpleModel(object):
     
     def predict(self, X):
         bow = list(map(self.dictionary.doc2bow, X))
-        if self.use_tfidf:
-            bow = self.tfidf_model[bow]
+        bow = gensim.matutils.corpus2csc(bow, num_terms=self.num_terms).T
+
+        if self.weight_model is not None:
+            bow = self.weight_model.transform(bow)
+
         if self.use_svd:
-            bow = gensim.matutils.corpus2csc(bow, num_terms=self.num_terms)
-            self.bow = bow
-            bow = bow.multiply(self.w.reshape(-1,1))
-            bow = gensim.matutils.Sparse2Corpus(bow)
+            bow = bow.multiply(self.w)
+            bow = gensim.matutils.Sparse2Corpus(bow.T)
             self.embedding = gensim.matutils.corpus2dense(self.lsi[bow], self.lsi.num_topics).T
         else:
-            bow = gensim.matutils.corpus2csc(bow, num_terms=self.num_terms)
-            self.bow = bow
-            self.embedding = bow.multiply(self.w.reshape(-1,1)).T            
+            self.embedding = bow.multiply(self.w)            
         Yhat = self.cls.predict(self.embedding)
         return Yhat
     
