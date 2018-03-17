@@ -5,7 +5,7 @@ from term_weights import SupervisedTermWeightingWTransformer, UnsupervisedTfidfT
 
 class SimpleModel(object):
     
-    SCHEMES = (None, 'tfidf', 'tfchi2', 'tfig', 'tfgr', 'tfor', 'tfrf', 'None')
+    SCHEMES = ('None', 'tfidf', 'tfchi2', 'tfig', 'tfgr', 'tfor', 'tfrf', 'None')
     TRANSFORMERS = { 
         'tfidf': UnsupervisedTfidfTransformer(norm=None),
         'tfchi2': SupervisedTermWeightingWTransformer(scheme='tfchi2'),
