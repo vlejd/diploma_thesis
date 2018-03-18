@@ -14,21 +14,32 @@ class Dataset(object):
         self.reshufle(seed)
 
     def reshufle(self, random_state=None):
-        shuffle = StratifiedShuffleSplit(10, random_state=random_state)
-        generator = shuffle.split(self.samples, self.labels)
-        self.train_id, self.test_id = next(iter(generator))
+        train_shuffle = StratifiedShuffleSplit(10, random_state=random_state, test_size=0.2)
+        generator1 = train_shuffle.split(self.samples, self.labels)
+        self.train_ids, others = next(iter(generator1))
+
+        test_shuffle = StratifiedShuffleSplit(10, random_state=random_state, test_size=0.5)
+        generator2 = test_shuffle.split(others, self.labels[others])
+        other_valid_id, other_test_id = next(iter(generator2))
+        self.valid_ids, self.test_ids = others[other_valid_id], others[other_test_id]
 
     def train_samples(self):
-        return np.array(self.samples)[self.train_id]
+        return np.array(self.samples)[self.train_ids]
 
     def train_labels(self):
-        return self.labels[self.train_id]
+        return self.labels[self.train_ids]
+
+    def valid_samples(self):
+        return np.array(self.samples)[self.valid_ids]
+
+    def valid_labels(self):
+        return self.labels[self.valid_ids]
 
     def test_samples(self):
-        return np.array(self.samples)[self.test_id]
+        return np.array(self.samples)[self.test_ids]
 
     def test_labels(self):
-        return self.labels[self.test_id]
+        return self.labels[self.test_ids]
 
     def loadFile(self, fpath):
         with io.open(fpath, 'r', encoding='latin-1') as f:

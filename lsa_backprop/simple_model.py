@@ -5,7 +5,9 @@ from term_weights import SupervisedTermWeightingWTransformer, UnsupervisedTfidfT
 
 class SimpleModel(object):
     
-    SCHEMES = ('None', 'tfidf', 'tfchi2', 'tfig', 'tfgr', 'tfor', 'tfrf', 'None')
+    SCHEMES = ('None', 'tfidf', 'tfchi2', 'tfig', 'tfgr', 'tfor', 'tfrf')
+    BASIC_SCHEMES = ('None', 'tfidf', 'tfchi2')
+
     TRANSFORMERS = { 
         'tfidf': UnsupervisedTfidfTransformer(norm=None),
         'tfchi2': SupervisedTermWeightingWTransformer(scheme='tfchi2'),
@@ -35,8 +37,11 @@ class SimpleModel(object):
         if self.weight_model is not None:
             self.weight_model.fit(bow, Y)
             bow = self.weight_model.transform(bow)
+
+        self.bow = bow
         if self.w is None:
             self.w = np.ones(self.num_terms)
+        bow = bow.multiply(self.w)
         if self.use_svd:
             bow = gensim.matutils.Sparse2Corpus(bow.T)
             self.lsi = gensim.models.LsiModel(bow, id2word=self.dictionary)
@@ -51,7 +56,7 @@ class SimpleModel(object):
         self.d_embedding = self.cls.dx(self.embedding, Y)
         u = self.lsi.projection.u
         res = self.d_embedding.dot(u.T)
-        dw = model.bow.multiply(res.T).sum(axis=1).T.A1
+        dw = self.bow.T.multiply(res.T).sum(axis=1).T.A1
         return dw
         
     
