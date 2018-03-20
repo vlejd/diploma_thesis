@@ -110,3 +110,4 @@ ENV/
 *.snm
 *.toc
 *.synctex.gz
+*.pickle
