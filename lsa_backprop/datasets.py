@@ -80,6 +80,43 @@ class MPQADataset(Dataset):
     def load_negatives(self):
         return self.loadFile(os.path.join(SENTEVAL_DATA_BASE, 'MPQA/mpqa.neg'))       
 
+class TRECDataset(Dataset):
+    SUPPORTED_LABELS = set(['ABBR', 'DESC', 'ENTY', 'HUM', 'LOC', 'NUM'])
+
+    def __init__(self, seed=1111, task_label='ABBR'):
+        self.task_label = task_label
+        assert task_label in self.SUPPORTED_LABELS
+        self.preload()
+        super().__init__(seed)
+
+    def loadFile(self, fpath):
+        real_fpath = os.path.join(SENTEVAL_DATA_BASE, fpath)
+        positives = []
+        negatives = []
+        with io.open(real_fpath, 'r', encoding='latin-1') as f:
+            for line in f:
+                target, sample = line.strip().split(':', 1)
+                sample = sample.split(' ', 1)[1].split()
+                assert target in self.SUPPORTED_LABELS
+                
+                if target == self.task_label:
+                    positives.append(sample)
+                else:
+                    negatives.append(sample)
+        return positives, negatives
+
+    def preload(self):
+        self.train_pos, self.train_neg = self.loadFile('TREC/train_5500.label')
+        self.test_pos, self.test_neg = self.loadFile('TREC/TREC_10.label')
+
+
+    def load_positives(self):
+        return self.train_pos + self.test_pos
+
+    def load_negatives(self):
+        return self.train_neg + self.test_neg
+
+
 class DebugDataset(CRDataset):
     def __init__(self, seed=1111):
         super().__init__(seed)
@@ -92,3 +129,5 @@ class DebugDataset(CRDataset):
         self.reshufle(seed)
 
 ALL_DATASETS = [CRDataset(), MRDataset(), SUBJDataset(), MPQADataset()]
+TREC_DATASETS = [TRECDataset(task) for task in TRECDataset.SUPPORTED_LABELS]
+
