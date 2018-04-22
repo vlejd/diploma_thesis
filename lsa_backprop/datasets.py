@@ -96,7 +96,7 @@ class TRECDataset(Dataset):
         with io.open(real_fpath, 'r', encoding='latin-1') as f:
             for line in f:
                 target, sample = line.strip().split(':', 1)
-                sample = sample.split(' ', 1)[1].split()
+                sample = sample.split(' ', 1)[1].lower().split()
                 assert target in self.SUPPORTED_LABELS
                 
                 if target == self.task_label:
@@ -116,6 +116,9 @@ class TRECDataset(Dataset):
     def load_negatives(self):
         return self.train_neg + self.test_neg
 
+    def name(self):
+        return self.__class__.__name__+'-'+self.task_label
+
 
 class DebugDataset(CRDataset):
     def __init__(self, seed=1111):
@@ -129,5 +132,5 @@ class DebugDataset(CRDataset):
         self.reshufle(seed)
 
 ALL_DATASETS = [CRDataset(), MRDataset(), SUBJDataset(), MPQADataset()]
-TREC_DATASETS = [TRECDataset(task) for task in TRECDataset.SUPPORTED_LABELS]
+TREC_DATASETS = [TRECDataset(task_label=task) for task in TRECDataset.SUPPORTED_LABELS]
 
