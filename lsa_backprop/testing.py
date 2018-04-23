@@ -13,7 +13,6 @@ def test_simple_model(model, dataset, iters=1, tag=None, results=None, dump=None
 
     if dump is not None:
         dump[dataset.name()][('simple', tag)] = {
-            'model': model,
             'results': precisions
         }
 

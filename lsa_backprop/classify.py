@@ -1,6 +1,8 @@
 from sklearn.linear_model import LogisticRegression
 from scipy.stats import logistic
 import numpy as np
+from sklearn.svm import SVC
+
 
 class CustomClassifier(object):
     def __init__(self, alpha=0.01):
@@ -56,6 +58,22 @@ class SkClassifier(object):
         sigma = dif * Yhat * (1-Yhat)
         dx = (sigma.reshape(-1,1)* theta)
         return dx
+
+    
+    def predict(self, X):
+        return self.raw_cls.predict(X)
+
+class SVCClassifier(object):
+    def __init__(self, params=None):
+        if params is None:
+            params = {}
+        self.raw_cls = SVC(**params)
+
+    def fit(self, X, Y, epoch=1000):
+        self.raw_cls.fit(X, Y)
+            
+    def dx(self, X, Y):
+        raise "Not implemented"
 
     
     def predict(self, X):
