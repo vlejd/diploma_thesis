@@ -24,12 +24,33 @@ class SimpleModel(object):
             None: None
         }
         self.weight_model = TRANSFORMERS[weights] 
+        assert w is None or type(w) == dict
         if w is None:
-            self.w = None
+            self.internal_w = w
         else:
-            self.w = np.copy(w)
+            self.internal_w = w.copy()
+
         self.use_svd = use_svd
         self.svd_dim = svd_dim if svd_dim is not None else 200
+
+    def get_matrix_w(self):
+        if self.internal_w is None:
+            return np.ones(self.num_terms)
+        else:
+            matrix_w = np.ones(self.num_terms)
+            for x in self.internal_w:
+                idd = self.dictionary.token2id[x]
+                matrix_w[idd] = self.internal_w[x]
+
+            return matrix_w
+
+    def save_matrix_w(self, matrix_w):
+        assert matrix_w.shape[0] == self.num_terms
+        self.internal_w = {}
+        for word in self.dictionary.token2id:
+            word_idd = self.dictionary.token2id[word]
+            self.internal_w[word] = matrix_w[word_idd]
+
 
     def fit(self, X, Y):
         self.dictionary = gensim.corpora.Dictionary(X)
@@ -40,15 +61,14 @@ class SimpleModel(object):
             self.weight_model.fit(bow, Y)
             bow = self.weight_model.transform(bow)
 
-        if self.w is None:
-            self.w = np.ones(self.num_terms)
-        bow = bow.multiply(self.w)
+        matrix_w = self.get_matrix_w()
+        bow = bow.multiply(matrix_w)
         if self.use_svd:
             bow = gensim.matutils.Sparse2Corpus(bow.T)
             self.lsi = gensim.models.LsiModel(bow, num_topics=self.svd_dim, id2word=self.dictionary, extra_samples=200, power_iters=3)
             self.corpus = gensim.matutils.corpus2dense(self.lsi[bow], self.lsi.num_topics).T
         else:
-            self.corpus = bow.multiply(self.w)
+            self.corpus = bow.multiply(matrix_w)
             
         self.cls.fit(self.corpus, Y)
     
@@ -70,12 +90,13 @@ class SimpleModel(object):
         if self.weight_model is not None:
             bow = self.weight_model.transform(bow)
         self.bow = bow
+        matrix_w = self.get_matrix_w()
         if self.use_svd:
-            bow = bow.multiply(self.w)
+            bow = bow.multiply(matrix_w)
             bow = gensim.matutils.Sparse2Corpus(bow.T)
             self.embedding = gensim.matutils.corpus2dense(self.lsi[bow], self.lsi.num_topics).T
         else:
-            self.embedding = bow.multiply(self.w)            
+            self.embedding = bow.multiply(matrix_w)            
         Yhat = self.cls.predict(self.embedding)
         return Yhat
     

@@ -51,6 +51,10 @@ class Dataset(object):
 
     def name(self):
         return self.__class__.__name__
+
+    def bias(self):
+        mean = np.mean(self.labels)
+        return max(mean, 1-mean)
     
 class CRDataset(Dataset):
     def load_positives(self):
