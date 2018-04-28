@@ -64,11 +64,11 @@ def gradient_w(model, dataset, alpha=0.01, epochs=150):
             t.set_postfix(train_score=train_score, valid_score=valid_score, test_score=test_score, previos=previos_mean, end=end_mean)
             if end_mean < previos_mean:
                 break
-    plt.plot(train_scores)
-    plt.plot(valid_scores)
-    plt.plot(test_scores)
-    plt.legend(['train', 'valid', 'test'])
     if not INSCRIPT:
+        plt.plot(train_scores)
+        plt.plot(valid_scores)
+        plt.plot(test_scores)
+        plt.legend(['train', 'valid', 'test'])
         plt.show()
     return train_scores, valid_scores, test_scores
 
