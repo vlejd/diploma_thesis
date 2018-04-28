@@ -13,15 +13,15 @@ class Dataset(object):
         self.n_samples = len(self.samples)
         self.reshufle(seed)
 
-    def reshufle(self, random_state=None):
-        train_shuffle = StratifiedShuffleSplit(10, random_state=random_state, test_size=0.2)
+    def reshufle(self, random_state=None, folds=10):
+        train_shuffle = StratifiedShuffleSplit(folds, random_state=random_state, test_size=0.2)
         generator1 = train_shuffle.split(self.samples, self.labels)
-        self.train_ids, others = next(iter(generator1))
-
-        test_shuffle = StratifiedShuffleSplit(10, random_state=random_state, test_size=0.5)
-        generator2 = test_shuffle.split(others, self.labels[others])
-        other_valid_id, other_test_id = next(iter(generator2))
-        self.valid_ids, self.test_ids = others[other_valid_id], others[other_test_id]
+        for split_index, (self.train_ids, others) in enumerate(generator1):
+            test_shuffle = StratifiedShuffleSplit(folds, random_state=random_state, test_size=0.5)
+            generator2 = test_shuffle.split(others, self.labels[others])
+            other_valid_id, other_test_id = next(iter(generator2))
+            self.valid_ids, self.test_ids = others[other_valid_id], others[other_test_id]
+            yield split_index
 
     def train_samples(self):
         return np.array(self.samples)[self.train_ids]
