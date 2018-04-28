@@ -3,8 +3,7 @@ import numpy as np
 from sklearn.model_selection import StratifiedShuffleSplit
 
 
-SENTEVAL_DATA_BASE = os.path.join(
-    os.environ['SENTEVAL_DATA_BASE'], 'data/senteval_data')
+SENTEVAL_DATA_BASE = os.environ['SENTEVAL_DATA_BASE']
 #'/home/vlejd/Documents/school/diplomka/SentEval/data/senteval_data'
 
 
