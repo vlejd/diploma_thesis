@@ -2,7 +2,12 @@ import os, io
 import numpy as np
 from sklearn.model_selection import StratifiedShuffleSplit
 
-SENTEVAL_DATA_BASE = '/home/vlejd/Documents/school/diplomka/SentEval/data/senteval_data'
+
+SENTEVAL_DATA_BASE = os.path.join(
+    os.environ['SENTEVAL_DATA_BASE'], 'data/senteval_data')
+#'/home/vlejd/Documents/school/diplomka/SentEval/data/senteval_data'
+
+
 class Dataset(object):
     def __init__(self, seed=1111):
         self.seed = seed
@@ -55,12 +60,12 @@ class Dataset(object):
     def bias(self):
         mean = np.mean(self.labels)
         return max(mean, 1-mean)
-    
+
 class CRDataset(Dataset):
     def load_positives(self):
         return self.loadFile(os.path.join(SENTEVAL_DATA_BASE, 'CR/custrev.pos'))
 
-    def load_negatives(self): 
+    def load_negatives(self):
         return self.loadFile(os.path.join(SENTEVAL_DATA_BASE, 'CR/custrev.neg'))
 
 class MRDataset(Dataset):
@@ -82,7 +87,7 @@ class MPQADataset(Dataset):
         return self.loadFile(os.path.join(SENTEVAL_DATA_BASE, 'MPQA/mpqa.pos'))
 
     def load_negatives(self):
-        return self.loadFile(os.path.join(SENTEVAL_DATA_BASE, 'MPQA/mpqa.neg'))       
+        return self.loadFile(os.path.join(SENTEVAL_DATA_BASE, 'MPQA/mpqa.neg'))
 
 class TRECDataset(Dataset):
     SUPPORTED_LABELS = set(['ABBR', 'DESC', 'ENTY', 'HUM', 'LOC', 'NUM'])
@@ -102,7 +107,7 @@ class TRECDataset(Dataset):
                 target, sample = line.strip().split(':', 1)
                 sample = sample.split(' ', 1)[1].lower().split()
                 assert target in self.SUPPORTED_LABELS
-                
+
                 if target == self.task_label:
                     positives.append(sample)
                 else:
