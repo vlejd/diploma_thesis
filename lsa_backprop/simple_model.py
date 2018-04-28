@@ -53,6 +53,7 @@ class SimpleModel(object):
 
 
     def fit(self, X, Y):
+        self.internal_w = None
         self.dictionary = gensim.corpora.Dictionary(X)
         self.num_terms = len(self.dictionary.dfs)
         bow = list(map(self.dictionary.doc2bow, X))
