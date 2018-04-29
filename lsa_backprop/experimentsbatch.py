@@ -119,16 +119,17 @@ def args2tag(args):
     return tag
     
 
+result_file_pattern = 'dumps_new/batch_results_{}.pickle'
+dump_file_pattern = 'dumps_new/batch_dump_{}.pickle'
 def run_test(args):
     start = True
     start_on = ' '
     dump_results = True
 
-    result_file_pattern = 'dumps_new/batch_results_{}.pickle'
-    dump_file_pattern = 'dumps_new/batch_dump_{}.pickle'
     results = defaultdict(dict)
     dump = defaultdict(dict)
-    
+
+    dataset, scheme, alpha, dims = args
     tag = args2tag(args)
     results_file = result_file_pattern.format(tag)
     dumps_file = dump_file_pattern.format(tag)
@@ -161,9 +162,11 @@ def main(sharding = 10, offset = 0, threads=3):
                     arg = (dataset, scheme, alpha, dims)
                     if result_file_pattern.format(args2tag(arg)) not in done:
                         args.append(arg)
-
+                        
+    todo = args[offset::sharding]
+    print(len(todo))
     with Pool(threads) as p:
-        print(p.map(run_test, args[offset::sharding]))
+        print(p.map(run_test, todo))
 
     
 if __name__=="__main__":
