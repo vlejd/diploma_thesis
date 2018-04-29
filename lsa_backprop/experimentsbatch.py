@@ -63,7 +63,7 @@ def gradient_w(model, dataset, alpha=0.01, epochs=150):
             end_mean = np.mean(valid_scores[-10:])
             previos_mean = np.mean(valid_scores[-20:-10])
             t.set_postfix(train_score=train_score, valid_score=valid_score, test_score=test_score, previos=previos_mean, end=end_mean)
-            if end_mean < previos_mean:
+            if end_mean <= previos_mean:
                 break
     if not INSCRIPT:
         plt.plot(train_scores)
