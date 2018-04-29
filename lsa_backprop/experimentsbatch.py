@@ -10,7 +10,6 @@ import tqdm
 import os
 
 
-
 import datasets
 import classify
 from simple_model import SimpleModel
@@ -24,8 +23,10 @@ from collections import defaultdict
 
 def get_environ(key, default=None):
     if key in os.environ:
+        if os.environ[key] is None:
+            return default
         return os.environ[key]
-    else: return None
+    else: return default
 
 
 INSCRIPT = bool(int(get_environ('INSCRIPT', "0")))
@@ -113,6 +114,10 @@ def test_simple_model_with_gradient(
 
 # In[54]:
 
+def args2tag(args):
+    tag = '{}_{}_{}_{}'.format(args[0].name(), *args[1:])
+    return tag
+    
 
 def run_test(args):
     start = True
@@ -124,8 +129,7 @@ def run_test(args):
     results = defaultdict(dict)
     dump = defaultdict(dict)
     
-    dataset, scheme, alpha, dims = args
-    tag = '{}_{}_{}_{}'.format(dataset.name(), scheme, alpha, dims)
+    tag = args2tag(args)
     results_file = result_file_pattern.format(tag)
     dumps_file = dump_file_pattern.format(tag)
     if os.path.isfile(results_file):
@@ -148,12 +152,15 @@ def run_test(args):
 
 
 def main(sharding = 10, offset = 0, threads=3):
+    done = json.load(open('done.json'))
     args = []
     for scheme in SimpleModel.SCHEMES:
         for alpha in [0.1, 0.01, 0.001]:
             for dims in [200, 300, 400]:
                 for dataset in datasets.ALL_DATASETS+ datasets.TREC_DATASETS:
-                    args.append((dataset, scheme, alpha, dims))
+                    arg = (dataset, scheme, alpha, dims)
+                    if result_file_pattern.format(args2tag(arg)) not in done:
+                        args.append(arg)
 
     with Pool(threads) as p:
         print(p.map(run_test, args[offset::sharding]))
