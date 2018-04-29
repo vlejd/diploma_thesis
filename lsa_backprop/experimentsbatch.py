@@ -36,7 +36,7 @@ if INSCRIPT:
 else:
     from tqdm import tnrange
 
-def gradient_w(model, dataset, alpha=0.01, epochs=150):
+def gradient_w(model, dataset, alpha=0.01, epochs=150, w_steps=1):
     train_scores = []
     valid_scores = []
     test_scores = []
@@ -46,9 +46,10 @@ def gradient_w(model, dataset, alpha=0.01, epochs=150):
     else:
         t = tnrange(epochs)
     for e in t:
-        w = model.get_matrix_w()
-        w -= alpha * model.dw(dataset.train_samples(), dataset.train_labels())
-        model.save_matrix_w(w)
+        for wstep in tnrange(w_steps):
+            w = model.get_matrix_w()
+            w -= alpha * model.dw(dataset.train_samples(), dataset.train_labels())
+            model.save_matrix_w(w)
         model.fit(dataset.train_samples(), dataset.train_labels())
 
         train_score = model.score(dataset.train_samples(), dataset.train_labels())
@@ -78,11 +79,11 @@ def gradient_w(model, dataset, alpha=0.01, epochs=150):
 
 
 def test_simple_model_with_gradient(
-    model, dataset, gradient_iters=300, dims=300, alpha=0.01, tag=None, results=None, dump=None, with_models=False, folds=1):
+    model, dataset, gradient_iters=300, dims=300, alpha=0.01, tag=None, results=None, dump=None, with_models=False, folds=1, w_steps=1):
     
     for i in dataset.reshufle(None, folds):
         model.internal_w=None
-        train_ps, valid_ps, test_ps = gradient_w(model, dataset, alpha, gradient_iters)
+        train_ps, valid_ps, test_ps = gradient_w(model, dataset, alpha, gradient_iters, w_steps)
         #train_p = model.score(dataset.train_samples(), dataset.train_labels())
         #test_p = model.score(dataset.test_samples(), dataset.test_labels())
 
@@ -115,7 +116,7 @@ def test_simple_model_with_gradient(
 # In[54]:
 
 def args2tag(args):
-    tag = '{}_{}_{}_{}'.format(args[0].name(), *args[1:])
+    tag = ('{}'+('_{}'*(len(args)-1))).format(args[0].name(), *args[1:])
     return tag
     
 
@@ -150,6 +151,36 @@ def run_test(args):
         pickle.dump(dump, open(dumps_file, 'bw'))
                 
 
+result_multiw_file_pattern = 'dumps_multiw/batch_results_{}.pickle'
+dump_multiw_file_pattern = 'dumps_multiw/batch_dump_{}.pickle'
+def run_test_multiw(args):
+    start = True
+    start_on = ' '
+    dump_results = True
+
+    results = defaultdict(dict)
+    dump = defaultdict(dict)
+
+    dataset, scheme, alpha, dims, w_steps = args
+    tag = args2tag(args)
+    results_file = result_multiw_file_pattern.format(tag)
+    dumps_file = dump_multiw_file_pattern.format(tag)
+    if os.path.isfile(results_file):
+        print('skipping', results_file)
+        return
+    if not start:
+        start = (tag == start_on)
+        return
+    print(dataset.name(), scheme, alpha, dims, tag)
+    model = SimpleModel(classify.SkClassifier(), use_svd=True, weights=scheme, svd_dim=dims)
+    test_simple_model_with_gradient(
+        model, dataset, alpha=alpha, dims=dims, tag=scheme, 
+        gradient_iters=None, results=results, dump=dump, with_models=False, folds=1, w_steps=w_steps)
+    print(list(model.internal_w.items())[:10])
+    if dump_results:
+        pickle.dump(results, open(results_file, 'bw'))
+        pickle.dump(dump, open(dumps_file, 'bw'))
+                
 
 
 def main(sharding = 10, offset = 0, threads=3):
