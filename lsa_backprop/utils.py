@@ -20,3 +20,8 @@ def tabular(text, caption=''):
 """
     return top + text + bot
 
+
+def multireplace(txt, lis):
+    for q,w in lis:
+        txt = txt.replace(q,w)
+    return txt
