@@ -202,7 +202,12 @@ def main(sharding = 10, offset = 0, threads=3):
         for i,tod in enumerate(todo):
             with open('log.log','w') as log:
                 print(i,file=log)
-            run_test(tod)
+            try:
+                run_test(tod)
+            except:
+                with open('log.log','w') as log:
+                    print(i, "error",file=log)
+                raise
     else:
         with Pool(threads) as p:
             print(p.map(run_test, todo))
