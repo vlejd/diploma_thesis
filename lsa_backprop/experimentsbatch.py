@@ -185,6 +185,8 @@ def run_test_multiw(args):
 
 def main(sharding = 10, offset = 0, threads=3):
     done = json.load(open('done.json'))
+    with open('log.log','w') as log:
+        print('start',file=log)
     args = []
     for scheme in SimpleModel.SCHEMES:
         for alpha in [0.1, 0.01, 0.001]:
@@ -197,11 +199,16 @@ def main(sharding = 10, offset = 0, threads=3):
     todo = args[offset::sharding]
     print(len(todo))
     if threads==1:
-        for tod in todo:
+        for i,tod in enumerate(todo):
+            with open('log.log','w') as log:
+                print(i,file=log)
             run_test(tod)
     else:
         with Pool(threads) as p:
             print(p.map(run_test, todo))
+    
+    with open('log.log','w') as log:
+        print('done',file=log)
 
     
 if __name__=="__main__":
