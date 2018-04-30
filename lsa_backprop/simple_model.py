@@ -77,8 +77,9 @@ class SimpleModel(object):
             raise('Derivation can be used only wth svd') 
         _ = self.predict(X)
         self.d_embedding = self.cls.dx(self.embedding, Y)
-        u = self.lsi.projection.u
-        res = self.d_embedding.dot(u.T)
+        uT = self.lsi.projection.u.T
+        uT.resize((self.svd_dim, uT.shape[1])) # because gensim sometimes sucks
+        res = self.d_embedding.dot(uT)
         dw = self.bow.T.multiply(res.T).sum(axis=1).T.A1
         return dw
         
