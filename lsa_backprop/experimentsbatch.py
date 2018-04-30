@@ -175,7 +175,7 @@ def run_test_multiw(args):
     model = SimpleModel(classify.SkClassifier(), use_svd=True, weights=scheme, svd_dim=dims)
     test_simple_model_with_gradient(
         model, dataset, alpha=alpha, dims=dims, tag=scheme, 
-        gradient_iters=None, results=results, dump=dump, with_models=False, folds=1, w_steps=w_steps)
+        gradient_iters=None, results=results, dump=dump, with_models=False, folds=3, w_steps=w_steps)
     print(list(model.internal_w.items())[:10])
     if dump_results:
         pickle.dump(results, open(results_file, 'bw'))
@@ -196,8 +196,12 @@ def main(sharding = 10, offset = 0, threads=3):
                         
     todo = args[offset::sharding]
     print(len(todo))
-    with Pool(threads) as p:
-        print(p.map(run_test, todo))
+    if threads==1:
+        for tod in todo:
+            run_test(tod)
+    else:
+        with Pool(threads) as p:
+            print(p.map(run_test, todo))
 
     
 if __name__=="__main__":
