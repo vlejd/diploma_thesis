@@ -7,7 +7,7 @@ def subtract_baseline(df):
         if d.name() in df.columns:
             df[d.name()] -= d.bias()
 
-def tabular(text, caption=''):
+def tabular(text, caption='', label=''):
     top = r"""
 \begin{table}[H]
 \begin{center}
@@ -15,7 +15,7 @@ def tabular(text, caption=''):
 """
     bot = r"""
 \caption["""+caption+r"""]{"""+caption+r"""}
-\label{tab:}
+\label{"""+label+"""}
 \end{center}
 \end{table}
 
@@ -23,7 +23,13 @@ def tabular(text, caption=''):
     return top + text + bot
 
 
-def multireplace(txt, lis):
+STANDARD_REPLACE = (
+    ('  ', ' '),
+    ('Dataset',''),
+    ('TREC-',''),
+)
+
+def multireplace(txt, lis=STANDARD_REPLACE):
     for q,w in lis:
         txt = txt.replace(q,w)
     return txt
