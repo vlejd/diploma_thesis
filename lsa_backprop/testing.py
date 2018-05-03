@@ -4,7 +4,7 @@ from tqdm import tnrange
 
 def test_simple_model(model, dataset, iters=1, tag=None, results=None, dump=None):
     precisions = []
-    for it in tnrange(iters):
+    for ti in dataset.reshufle(None, iters):
         model.fit(dataset.train_samples(), dataset.train_labels())
         train_p = model.score(dataset.train_samples(), dataset.train_labels())
         valid_p = model.score(dataset.valid_samples(), dataset.valid_labels())

@@ -43,3 +43,8 @@ def color_positives(val):
 TREC = ['TRECDataset-ABBR', 'TRECDataset-DESC', 'TRECDataset-ENTY', 'TRECDataset-HUM', 'TRECDataset-LOC', 'TRECDataset-NUM']
 NOTREC = ['CRDataset', 'MPQADataset', 'MRDataset', 'SUBJDataset']
 
+def bold_positives(x):
+    if x>0:
+        return "\\textbf{{{}}}".format(x)
+    else:
+        return "{}".format(x)
